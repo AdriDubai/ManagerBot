@@ -1,3 +1,6 @@
+@bot.message_handler(func=lambda message: True)  # Обработчик всех текстовых сообщений
+def echo_all(message):
+    bot.reply_to(message, f"Ты написал: {message.text}")
 from flask import Flask, request
 import telebot
 import os
