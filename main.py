@@ -2,7 +2,6 @@ from flask import Flask, request
 import telebot
 import os
 import openai
-import time
 
 # Получение токенов из переменных окружения
 TOKEN = os.getenv("TELEGRAM_API_TOKEN")
@@ -34,14 +33,16 @@ def get_message():
 def gpt_reply(message):
     print(f"Получено сообщение от пользователя: {message.chat.username}: {message.text}")
     try:
-        # Используем правильный метод OpenAI ChatCompletion
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",  # Название модели
-            messages=[
-                {"role": "user", "content": message.text}
-            ]
+        # Используем правильный метод OpenAI
+        response = openai.Completion.create(
+            engine="text-davinci-003",  # Название модели
+            prompt=message.text,
+            max_tokens=200,
+            n=1,
+            stop=None,
+            temperature=0.7,
         )
-        reply = response['choices'][0]['message']['content'].strip()
+        reply = response['choices'][0]['text'].strip()
         print(f"Ответ от OpenAI: {reply}")
         bot.reply_to(message, reply)
     except Exception as e:
