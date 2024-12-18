@@ -10,12 +10,14 @@ RENDER_URL = os.getenv("RENDER_URL")
 bot = telebot.TeleBot(TOKEN)
 app = Flask(__name__)
 
-# Устанавливаем webhook при запуске
 @app.route("/")
 def webhook():
-    bot.remove_webhook()
-    bot.set_webhook(url=f"{RENDER_URL}/{TOKEN}")
+    webhook_info = bot.get_webhook_info()
+    if not webhook_info.url:  # Проверка, установлен ли вебхук
+        bot.remove_webhook()
+        bot.set_webhook(url=f"{RENDER_URL}/{TOKEN}")
     return "Webhook установлен!", 200
+
 
 # Получение сообщений от Telegram
 @app.route('/' + TOKEN, methods=['POST'])
