@@ -34,12 +34,11 @@ def gpt_reply(message):
             model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": message.text}]
         )
-        reply = response.choices[0].message["content"]  # Исправленный синтаксис
+        reply = response['choices'][0]['message']['content']
         bot.reply_to(message, reply)
     except Exception as e:
-        error_message = f"Error: {e}"  # Логируем ошибку
-        print(error_message)          # Печать ошибки в логи Render
         bot.reply_to(message, "Произошла ошибка при обработке запроса.")
+        print(f"Error: {e}")
 
 # Запуск Flask-приложения
 if __name__ == "__main__":
