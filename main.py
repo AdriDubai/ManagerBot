@@ -43,8 +43,9 @@ def gpt_reply(message):
         time.sleep(2)  # Задержка между ответами
         bot.reply_to(message, reply)
     except Exception as e:
-        print(f"Error: {e}")
-        bot.reply_to(message, "Произошла ошибка при обработке запроса.")
+    print(f"Error: {e}")  # Полная ошибка
+    bot.reply_to(message, f"Ошибка: {str(e)}")  # Показываем ошибку пользователю
+
 
 # Запуск Flask-приложения
 if __name__ == "__main__":
