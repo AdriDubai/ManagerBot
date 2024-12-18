@@ -14,13 +14,14 @@ app = Flask(__name__)
 openai.api_key = OPENAI_API_KEY
 
 # Устанавливаем webhook один раз при запуске
-@app.before_first_request
 def setup_webhook():
     webhook_info = bot.get_webhook_info()
     if not webhook_info.url or webhook_info.url != f"{RENDER_URL}/{TOKEN}":
         bot.remove_webhook()
         bot.set_webhook(url=f"{RENDER_URL}/{TOKEN}")
         print("Webhook установлен!")
+
+setup_webhook()  # Явно вызываем функцию при старте
 
 # Получение сообщений от Telegram
 @app.route('/' + TOKEN, methods=['POST'])
