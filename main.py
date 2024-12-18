@@ -1,23 +1,23 @@
 from flask import Flask, request
 import telebot
 import os
-import openai  # Новый импорт
+import openai
 
-# Получение токена из переменных окружения
+# Получение токенов из переменных окружения
 TOKEN = os.getenv("TELEGRAM_API_TOKEN")
 RENDER_URL = os.getenv("RENDER_URL")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 bot = telebot.TeleBot(TOKEN)
 app = Flask(__name__)
+openai.api_key = OPENAI_API_KEY
 
+# Устанавливаем webhook при запуске
 @app.route("/")
 def webhook():
-    webhook_info = bot.get_webhook_info()
-    if not webhook_info.url:  # Проверка, установлен ли вебхук
-        bot.remove_webhook()
-        bot.set_webhook(url=f"{RENDER_URL}/{TOKEN}")
+    bot.remove_webhook()
+    bot.set_webhook(url=f"{RENDER_URL}/{TOKEN}")
     return "Webhook установлен!", 200
-
 
 # Получение сообщений от Telegram
 @app.route('/' + TOKEN, methods=['POST'])
@@ -27,6 +27,7 @@ def getMessage():
     )
     return "!", 200
 
+# Обработчик всех текстовых сообщений
 @bot.message_handler(func=lambda message: True)
 def gpt_reply(message):
     try:
