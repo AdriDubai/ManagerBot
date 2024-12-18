@@ -27,25 +27,19 @@ def getMessage():
     )
     return "!", 200
 
-# Обработчик команды /start и /help
-@bot.message_handler(commands=['start', 'help'])
-def send_welcome(message):
-    bot.reply_to(message, "Привет! Я бот на базе GPT.")
-
 @bot.message_handler(func=lambda message: True)
 def gpt_reply(message):
     try:
-        # Отправка запроса к OpenAI GPT
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": message.text}]
         )
-        reply = response.choices[0].message["content"]
+        reply = response.choices[0].message["content"]  # Исправленный синтаксис
         bot.reply_to(message, reply)
     except Exception as e:
+        error_message = f"Error: {e}"  # Логируем ошибку
+        print(error_message)          # Печать ошибки в логи Render
         bot.reply_to(message, "Произошла ошибка при обработке запроса.")
-        print(f"Error: {e}")
-
 
 # Запуск Flask-приложения
 if __name__ == "__main__":
