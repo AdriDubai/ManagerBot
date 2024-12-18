@@ -33,16 +33,14 @@ def get_message():
 def gpt_reply(message):
     print(f"Получено сообщение от пользователя: {message.chat.username}: {message.text}")
     try:
-        # Используем правильный метод OpenAI
-        response = openai.Completion.create(
-            engine="text-davinci-003",  # Название модели
-            prompt=message.text,
-            max_tokens=200,
-            n=1,
-            stop=None,
-            temperature=0.7,
+        # Используем модель gpt-4
+        response = openai.ChatCompletion.create(
+            model="gpt-4",
+            messages=[
+                {"role": "user", "content": message.text}
+            ]
         )
-        reply = response['choices'][0]['text'].strip()
+        reply = response['choices'][0]['message']['content'].strip()
         print(f"Ответ от OpenAI: {reply}")
         bot.reply_to(message, reply)
     except Exception as e:
