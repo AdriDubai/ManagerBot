@@ -32,7 +32,7 @@ def get_message():
 # Обработчик всех текстовых сообщений
 @bot.message_handler(func=lambda message: True)
 def gpt_reply(message):
-print(f"Получено сообщение от пользователя: {message.chat.username}: {message.text}")
+    print(f"Получено сообщение от пользователя: {message.chat.username}: {message.text}")
     try:
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
@@ -40,11 +40,10 @@ print(f"Получено сообщение от пользователя: {mess
         )
         reply = response['choices'][0]['message']['content']
         print(f"Ответ от OpenAI: {reply}")
-        time.sleep(2)  # Задержка между ответами
         bot.reply_to(message, reply)
     except Exception as e:
         print(f"Произошла ошибка: {e}")
-        bot.reply_to(message, "Произошла ошибка при обработке запроса.")
+        bot.reply_to(message, f"Произошла ошибка: {e}")
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
