@@ -37,7 +37,7 @@ def gpt_reply(message):
         )
         reply = response['choices'][0]['message']['content']
         bot.reply_to(message, reply)
-        time.sleep(1)  # Добавляем задержку для предотвращения ошибки 429
+        time.sleep(3)  # Добавляем задержку для предотвращения ошибки 429
     except Exception as e:
         print(f"Error: {e}")  # Логируем ошибку
         bot.reply_to(message, "Произошла ошибка при обработке запроса.")
