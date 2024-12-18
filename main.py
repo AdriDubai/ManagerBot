@@ -2,15 +2,15 @@ from flask import Flask, request
 import telebot
 import os
 import openai
+import time  # Добавили импорт time
 
 # Получение токенов из переменных окружения
 TOKEN = os.getenv("TELEGRAM_API_TOKEN")
 RENDER_URL = os.getenv("RENDER_URL")
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 bot = telebot.TeleBot(TOKEN)
 app = Flask(__name__)
-openai.api_key = OPENAI_API_KEY
 
 # Устанавливаем webhook при запуске
 @app.route("/")
@@ -37,9 +37,10 @@ def gpt_reply(message):
         )
         reply = response['choices'][0]['message']['content']
         bot.reply_to(message, reply)
+        time.sleep(1)  # Добавляем задержку для предотвращения ошибки 429
     except Exception as e:
+        print(f"Error: {e}")  # Логируем ошибку
         bot.reply_to(message, "Произошла ошибка при обработке запроса.")
-        print(f"Error: {e}")
 
 # Запуск Flask-приложения
 if __name__ == "__main__":
